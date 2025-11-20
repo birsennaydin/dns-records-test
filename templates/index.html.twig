@@ -1,0 +1,65 @@
+<!-- Author: Birsen Aydin -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>DNS Records Test</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 2rem; }
+        label, input, button { font-size: 1rem; }
+        input { padding: 0.25rem 0.5rem; margin-right: 0.5rem; }
+        button { padding: 0.3rem 0.8rem; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 1rem; margin-top: 1rem; white-space: pre-wrap; }
+        .error { color: #b00020; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+<h1>DNS Records Test</h1>
+
+<form id="dns-form">
+    <label for="domain">Domain:</label>
+    <input type="text" id="domain" name="domain" placeholder="domain.com" required>
+    <button type="submit">Search</button>
+</form>
+
+<div id="error" class="error"></div>
+<pre id="result"></pre>
+
+<script>
+    const form = document.getElementById('dns-form');
+    const resultEl = document.getElementById('result');
+    const errorEl = document.getElementById('error');
+    const domainInput = document.getElementById('domain');
+
+    const clearOutput = () => {
+        errorEl.textContent = '';
+        resultEl.textContent = '';
+    };
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearOutput();
+
+        const domain = domainInput.value.trim();
+        if (!domain) {
+            errorEl.textContent = 'Please enter a domain.';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/dns?domain=${encodeURIComponent(domain)}`);
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                errorEl.textContent = data.errors ?? 'An unknown error occurred.';
+                return;
+            }
+
+            resultEl.textContent = JSON.stringify(data.records, null, 2);
+        } catch (e) {
+            errorEl.textContent = 'Unable to reach server.';
+        }
+    });
+</script>
+</body>
+</html>
