@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * DNS Lookup API Controller
  *
  * Author: Birsen Aydin
  */

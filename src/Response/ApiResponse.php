@@ -2,9 +2,6 @@
 
 namespace App\Response;
 
-/**
- * Standardized API response helper (best practice).
- */
 class ApiResponse
 {
     /**
